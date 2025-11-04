@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>루미큐브 - AI 대전 연습 게임</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <!-- 게임 시작 화면 (난이도 선택) -->
+    <div id="start-screen" class="screen">
+        <div class="start-container">
+            <h1>🃏 루미큐브</h1>
+            <p class="subtitle">AI와 대결하며 실력을 향상시키세요!</p>
+            
+            <div class="difficulty-selector">
+                <h2>난이도 선택</h2>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn" data-difficulty="easy">
+                        <div class="difficulty-icon">🌱</div>
+                        <div class="difficulty-name">쉬움</div>
+                        <div class="difficulty-desc">초보자용 - 기본 조합만 사용</div>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="normal">
+                        <div class="difficulty-icon">⭐</div>
+                        <div class="difficulty-name">보통</div>
+                        <div class="difficulty-desc">일반 플레이어용 - 최적 플레이</div>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="hard">
+                        <div class="difficulty-icon">🔥</div>
+                        <div class="difficulty-name">어려움</div>
+                        <div class="difficulty-desc">고수용 - 전략적 플레이</div>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="expert">
+                        <div class="difficulty-icon">👑</div>
+                        <div class="difficulty-name">전문가</div>
+                        <div class="difficulty-desc">마스터용 - 최적의 전략</div>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="menu-actions">
+                <button id="btn-rules" class="btn btn-secondary">게임 규칙</button>
+                <button id="btn-statistics" class="btn btn-secondary">통계 보기</button>
+                <button id="btn-load-game" class="btn btn-secondary">저장된 게임 불러오기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game-screen" class="screen hidden">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="header-left">
+                <button id="btn-menu" class="btn-icon">☰</button>
+                <h1>🃏 루미큐브</h1>
+            </div>
+            <div class="game-info">
+                <div class="player-turn">
+                    <span id="current-player">나의</span> 턴
+                    <div class="turn-timer">
+                        <span id="turn-timer">30</span>초
+                    </div>
+                </div>
+                <div class="score-display">
+                    <div class="score-item">
+                        <span class="score-label">나</span>
+                        <div class="score-value">
+                            <span id="player-score">0</span>
+                            <span class="tile-count-badge" id="player-tile-count">14개</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">AI 1</span>
+                        <div class="score-value">
+                            <span id="ai1-score">0</span>
+                            <span class="tile-count-badge" id="ai1-tile-count">14개</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">AI 2</span>
+                        <div class="score-value">
+                            <span id="ai2-score">0</span>
+                            <span class="tile-count-badge" id="ai2-tile-count">14개</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">AI 3</span>
+                        <div class="score-value">
+                            <span id="ai3-score">0</span>
+                            <span class="tile-count-badge" id="ai3-tile-count">14개</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="difficulty-badge" id="difficulty-badge">
+                    <span id="current-difficulty">보통</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 게임 보드 -->
+        <div class="game-board">
+            <!-- 테이블 영역 (타일 배치) -->
+            <div class="table-area" id="table-area">
+                <div class="table-label">테이블</div>
+                <div class="tile-groups" id="table-tiles"></div>
+            </div>
+
+            <!-- 플레이어 핸드 -->
+            <div class="hand-area">
+                <div class="hand-label">
+                    <span>내 타일</span>
+                    <span class="tile-count">(<span id="hand-count">14</span>개)</span>
+                </div>
+                <div class="hand-tiles" id="hand-tiles"></div>
+            </div>
+
+            <!-- 타일 랙 (뽑기) -->
+            <div class="rack-area">
+                <div class="rack-label">남은 타일</div>
+                <div class="rack-tiles" id="rack-tiles">
+                    <div class="rack-tile" id="rack-tile">🃏</div>
+                    <div class="rack-count"><span id="rack-count">0</span>개</div>
+                </div>
+            </div>
+        </div>
+
+            <!-- 액션 버튼 -->
+            <div class="action-bar">
+                <button id="btn-draw" class="btn btn-primary">타일 뽑기</button>
+                <button id="btn-play" class="btn btn-success" disabled>플레이</button>
+                <button id="btn-undo" class="btn btn-outline" disabled>되돌리기</button>
+                <button id="btn-pass-turn" class="btn btn-warning" disabled>턴 넘기기</button>
+                <button id="btn-sort-run" class="btn btn-secondary">RUN 정렬</button>
+                <button id="btn-sort-set" class="btn btn-secondary">SET 정렬</button>
+                <button id="btn-pause" class="btn btn-outline">일시정지</button>
+                <button id="btn-save-game" class="btn btn-outline">게임 저장</button>
+                <button id="btn-new-game" class="btn btn-outline">새 게임</button>
+            </div>
+
+        <!-- 게임 상태 메시지 -->
+        <div class="game-status" id="game-status"></div>
+    </div>
+
+    <!-- 통계 화면 -->
+    <div id="statistics-screen" class="screen hidden">
+        <div class="statistics-container">
+            <h1>📊 게임 통계</h1>
+            <button id="btn-close-stats" class="btn-close">×</button>
+            
+            <div class="statistics-grid">
+                <div class="stat-card">
+                    <div class="stat-label">총 게임 수</div>
+                    <div class="stat-value" id="stat-total-games">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">승리 횟수</div>
+                    <div class="stat-value" id="stat-wins">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">승률</div>
+                    <div class="stat-value" id="stat-win-rate">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">평균 점수</div>
+                    <div class="stat-value" id="stat-avg-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">최고 점수</div>
+                    <div class="stat-value" id="stat-best-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">평균 게임 시간</div>
+                    <div class="stat-value" id="stat-avg-time">0분</div>
+                </div>
+            </div>
+            
+            <div class="difficulty-stats">
+                <h2>난이도별 통계</h2>
+                <div id="difficulty-stats-list"></div>
+            </div>
+            
+            <button id="btn-reset-stats" class="btn btn-danger">통계 초기화</button>
+        </div>
+    </div>
+
+    <!-- 메뉴 모달 -->
+    <div id="menu-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>메뉴</h2>
+                <button class="modal-close" id="menu-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <button id="btn-menu-save" class="btn btn-full">게임 저장</button>
+                <button id="btn-menu-load" class="btn btn-full">게임 불러오기</button>
+                <button id="btn-menu-statistics" class="btn btn-full">통계 보기</button>
+                <button id="btn-menu-rules" class="btn btn-full">게임 규칙</button>
+                <button id="btn-menu-new-game" class="btn btn-full">새 게임</button>
+                <button id="btn-menu-quit" class="btn btn-danger btn-full">게임 종료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 규칙 모달 -->
+    <div id="rules-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🎮 루미큐브 게임 규칙</h2>
+                <button class="modal-close" id="rules-close">&times;</button>
+            </div>
+            <div class="modal-content" id="rules-content">
+                <!-- 규칙 내용은 JavaScript에서 동적으로 로드 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 조합 확인 모달 -->
+    <div id="combinations-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🔍 가능한 조합 확인</h2>
+                <button class="modal-close" id="combinations-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div id="combinations-content">
+                    <!-- 조합 목록이 여기에 표시됨 -->
+                </div>
+                <div class="combination-actions">
+                    <button id="btn-apply-combination" class="btn btn-primary" disabled>선택한 조합 적용</button>
+                    <button id="btn-close-combinations" class="btn btn-secondary">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 종료 모달 -->
+    <div id="game-over-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="game-over-title">게임 종료</h2>
+                <button class="modal-close" id="game-over-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div id="game-over-message"></div>
+                <div class="game-over-actions">
+                    <button id="btn-play-again" class="btn btn-primary">다시 플레이</button>
+                    <button id="btn-back-menu" class="btn btn-secondary">메뉴로 돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/tile.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ai-player.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

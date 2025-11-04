@@ -1,0 +1,511 @@
+/**
+ * 게임 화면 스타일
+ */
+
+/* 게임 헤더 */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    color: #667eea;
+    margin: 0;
+}
+
+.game-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.player-turn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.turn-timer {
+    background: #f0f0f0;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.turn-timer.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.turn-timer.danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.score-display {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.score-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.score-value > span:first-child {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.tile-count-badge {
+    background: #f0f0f0;
+    color: #666;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.difficulty-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* 게임 보드 */
+.game-board {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* 테이블 영역 */
+.table-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    min-height: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table-area.drop-zone {
+    background: rgba(102, 126, 234, 0.1);
+    border: 3px dashed #667eea;
+}
+
+.table-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.tile-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    min-height: 100px;
+}
+
+.tile-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #f7fafc;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.tiles-container {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.tile-group.valid {
+    border-color: #48bb78;
+    background: #f0fff4;
+    box-shadow: 0 2px 8px rgba(72, 187, 120, 0.2);
+}
+
+.tile-group.invalid {
+    border-color: #f56565;
+    background: #fff5f5;
+    border-style: dashed;
+}
+
+.tile-group.type-set {
+    border-left: 4px solid #667eea;
+}
+
+.tile-group.type-run {
+    border-left: 4px solid #48bb78;
+}
+
+.group-type-label {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(102, 126, 234, 0.9);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tile-group.type-set .group-type-label {
+    background: rgba(102, 126, 234, 0.9);
+}
+
+.tile-group.type-run .group-type-label {
+    background: rgba(72, 187, 120, 0.9);
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+    font-size: 1rem;
+}
+
+/* 타일 스타일 */
+.tile {
+    width: 56px;
+    height: 80px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tile.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.tile.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.tile.joker {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.tile.red {
+    border-color: #e74c3c;
+}
+
+.tile.blue {
+    border-color: #3498db;
+}
+
+.tile.black {
+    border-color: #2c3e50;
+}
+
+.tile.yellow {
+    border-color: #f1c40f;
+}
+
+.tile-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.tile.joker .tile-number {
+    color: white;
+}
+
+.tile-color-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+/* 핸드 영역 */
+.hand-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hand-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tile-count {
+    font-size: 1rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.hand-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 100px;
+}
+
+/* 타일 랙 */
+.rack-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rack-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.rack-tiles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.rack-tile {
+    width: 80px;
+    height: 110px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 3px solid #333;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.rack-tile:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.rack-tile.animating {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.rack-count {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #666;
+}
+
+/* 액션 바 */
+.action-bar {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 1400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 게임 상태 메시지 */
+.game-status {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    text-align: center;
+}
+
+.game-status.info {
+    background: #3498db;
+    color: white;
+}
+
+.game-status.success {
+    background: #48bb78;
+    color: white;
+}
+
+.game-status.error {
+    background: #f56565;
+    color: white;
+}
+
+.game-status.warning {
+    background: #ed8936;
+    color: white;
+}
+
+/* 애니메이션 */
+.animate-from-rack {
+    animation: slideFromRack 0.6s ease-out;
+}
+
+.animate-to-table {
+    animation: slideToTable 0.6s ease-out;
+}
+
+@keyframes slideFromRack {
+    from {
+        transform: translateY(100px) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideToTable {
+    from {
+        transform: translateY(-100px) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* 랙 타일 펄스 애니메이션 */
+.rack-tile.animating {
+    animation: rackPulse 0.3s ease-in-out;
+}
+
+@keyframes rackPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .game-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .tile {
+        width: 48px;
+        height: 68px;
+    }
+    
+    .tile-number {
+        font-size: 1.2rem;
+    }
+    
+    .action-bar {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .rack-tile {
+        width: 60px;
+        height: 85px;
+        font-size: 2rem;
+    }
+}
+
