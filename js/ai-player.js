@@ -518,7 +518,7 @@ class AIPlayer {
                     const playResult = this.play(game);
                     
                     if (playResult) {
-                        // 플레이 성공
+                        // 플레이 성공 - 테이블 렌더링 (애니메이션 완료 후)
                         ui.renderTable();
                         ui.updateScore();
                         ui.updateTileCounts();
@@ -528,6 +528,8 @@ class AIPlayer {
                         await new Promise(r => setTimeout(r, 500));
                         resolve({ action: 'play', result: playResult });
                     } else {
+                        // 플레이 실패 시에도 테이블 다시 렌더링
+                        ui.renderTable();
                         resolve({ action: 'pass' });
                     }
                 } else {

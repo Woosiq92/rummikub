@@ -8,26 +8,29 @@
     padding: 15px 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
     gap: 15px;
 }
 
 .header-left {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 15px;
 }
 
 .header h1 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: #667eea;
     margin: 0;
+    white-space: nowrap;
+    min-width: fit-content;
 }
 
 .game-info {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
@@ -35,19 +38,25 @@
 
 .player-turn {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #333;
+}
+
+#current-player {
+    white-space: nowrap;
 }
 
 .turn-timer {
     background: #f0f0f0;
     padding: 5px 15px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: bold;
+    white-space: normal;
 }
 
 .turn-timer.warning {
@@ -62,6 +71,7 @@
 
 .score-display {
     display: flex;
+    flex-direction: column;
     gap: 20px;
     align-items: center;
 }
@@ -74,7 +84,7 @@
 }
 
 .score-label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #666;
 }
 
@@ -83,10 +93,11 @@
     flex-direction: column;
     align-items: center;
     gap: 3px;
+    font-size: 0.5rem;
 }
 
 .score-value > span:first-child {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: #667eea;
 }
@@ -94,9 +105,9 @@
 .tile-count-badge {
     background: #f0f0f0;
     color: #666;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    padding: 1px 8px;
+    border-radius: 7px;
+    font-size: 0.65rem !important;
     font-weight: 600;
     margin-top: 2px;
 }
@@ -106,7 +117,7 @@
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
@@ -326,7 +337,7 @@
 }
 
 .rack-label {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: 15px;
     color: #333;
@@ -340,15 +351,15 @@
 }
 
 .rack-tile {
-    width: 80px;
-    height: 110px;
+    width: 60px;
+    height: 85px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: 3px solid #333;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
+    font-size: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -373,7 +384,7 @@
 }
 
 .rack-count {
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #666;
 }
@@ -381,7 +392,7 @@
 /* 액션 바 */
 .action-bar {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
     padding: 20px;
@@ -390,6 +401,26 @@
     margin: 20px auto;
     max-width: 1400px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.action-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+    padding-right: 20px;
+}
+
+.action-group:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 30px;
+    background: #e0e0e0;
 }
 
 /* 게임 상태 메시지 */

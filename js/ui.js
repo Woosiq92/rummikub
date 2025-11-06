@@ -39,11 +39,6 @@ class RummikubUI {
             this.handleDraw();
         });
 
-        // 플레이 버튼
-        document.getElementById('btn-play')?.addEventListener('click', () => {
-            this.handlePlay();
-        });
-
         // 턴 넘기기 버튼
         document.getElementById('btn-pass-turn')?.addEventListener('click', () => {
             this.handlePassTurn();
@@ -749,17 +744,17 @@ class RummikubUI {
         
         if (!currentAI) return;
         
-        document.getElementById('btn-play').disabled = true;
         document.getElementById('btn-draw').disabled = true;
         this.stopTurnTimer();
         
         const result = await currentAI.processTurn(this.game, this);
         
         if (result.action === 'play') {
-            // AI 플레이 후 점수 업데이트
+            // AI 플레이 후 점수 업데이트 (이미 processTurn에서 renderTable 호출됨)
             const tableScore = this.game.calculateTableScore();
             this.game.scores[this.game.currentPlayer] = tableScore;
             
+            // 테이블이 제대로 렌더링되었는지 확인 (이중 체크)
             this.renderTable();
             this.updateScore();
             this.updateTileCounts();
@@ -944,13 +939,13 @@ class RummikubUI {
         
         if (playerElement) {
             if (this.game.currentPlayer === 1) {
-                playerElement.textContent = '나의';
+                playerElement.textContent = '나의 턴';
             } else if (this.game.currentPlayer >= 2 && this.game.currentPlayer <= 4) {
                 const aiIndex = this.game.currentPlayer - 2;
                 if (this.game.aiPlayers && this.game.aiPlayers[aiIndex]) {
-                    playerElement.textContent = this.game.aiPlayers[aiIndex].name;
+                    playerElement.textContent = this.game.aiPlayers[aiIndex].name + ' 턴';
                 } else {
-                    playerElement.textContent = `AI ${this.game.currentPlayer - 1}`;
+                    playerElement.textContent = `AI ${this.game.currentPlayer - 1} 턴`;
                 }
             }
         }
@@ -1109,17 +1104,15 @@ class RummikubUI {
      * 플레이 버튼 상태 업데이트
      */
     updatePlayButton() {
-        const playBtn = document.getElementById('btn-play');
         const drawBtn = document.getElementById('btn-draw');
         const passBtn = document.getElementById('btn-pass-turn');
         const undoBtn = document.getElementById('btn-undo');
         
-        if (!playBtn || !drawBtn || !passBtn || !undoBtn) return;
+        if (!drawBtn || !passBtn || !undoBtn) return;
         
         // 타일을 뽑으면 더 이상 플레이할 수 없음
         if (this.game.turnState.hasDrawn) {
             drawBtn.disabled = true;
-            playBtn.disabled = true;
             undoBtn.disabled = true; // 타일을 뽑은 후에는 되돌리기 불가
             // 타일을 뽑았으면 턴 넘기기 버튼 활성화
             if (this.game.currentPlayer === 1) {
@@ -1129,7 +1122,6 @@ class RummikubUI {
         }
         
         const canPlay = this.game.canPlay();
-        playBtn.disabled = !canPlay;
         drawBtn.disabled = false;
         
         // 턴 넘기기 버튼 상태 업데이트
@@ -1803,7 +1795,6 @@ class RummikubUI {
             
             // 버튼 비활성화
             document.getElementById('btn-draw').disabled = true;
-            document.getElementById('btn-play').disabled = true;
             document.getElementById('btn-undo').disabled = true;
             document.getElementById('btn-pass-turn').disabled = true;
             document.getElementById('btn-sort-run').disabled = true;
